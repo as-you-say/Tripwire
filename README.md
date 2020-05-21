@@ -14,7 +14,7 @@ tripwire 소스를 컴파일 하기 위한 gcc / gcc-c++ 패키지를 설치합�
 # yum -y install gcc gcc-c++
 ```
 
-## 2. 다운로드 및 압축풀
+## 2. 다운로드 및 압축풀기
 
 wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니다.
 
