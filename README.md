@@ -1,148 +1,89 @@
-# 설치하기
+# Install
 
-## 1. 필요한 패키지 설치
-
-Github 페이지에 있는 tripwire 를 다운로드 하기 위한 wget 패키지를 설치합니다.
-
-```text
-# yum -y install wget
-```
-
-tripwire 소스를 컴파일 하기 위한 gcc / gcc-c++ 패키지를 설치합니다.
+## 1. Download & Unzip
 
 ```
-# yum -y install gcc gcc-c++
-```
-
-## 2. 다운로드 및 압축풀기
-
-wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니다.
-
-{% embed url="https://github.com/Tripwire/tripwire-open-source/releases/download/2.4.3.7/tripwire-open-source-2.4.3.7.tar.gz" %}
-
-```text
 # wget https://github.com/Tripwire/tripwire-open-source/releases/download/2.4.3.7/tripwire-open-source-2.4.3.7.tar.gz
-```
-
-다운받은 소스의 압축을 풀고, 생성된 폴더로 이동합니다.
-
-```text
 # tar -zxvf tripwire-open-source-2.4.3.7.tar.gz
 # cd ./tripwire-open-source-2.4.3.7
 ```
 
-## 3. Configure 파일 설정 \(둘중 하나 선택\)
-
-기본 경로로 설치하기를 원한다면 --prefix 옵션 없이 Configure 파일을 실행합니다.
+## 2. Install gcc, gcc-c++ package
 
 ```text
-# ./configure
+# yum -y install gcc gcc-c++
 ```
 
-별도로 설치하고싶은 경로가 있다면 --prefix 옵션을 통해 경로를 지정해줍니다.  
-예\) \[Install folder path\] : /usr/local/test
+## 3. Set Install folder path
 
 ```text
 # ./configure --prefix=[Install folder path]
 ```
 
-## 4. 소스 컴파일
-
-make , make install 명령어를 통해서 소를 컴파일 합니다.
+## 4. Compile
 
 ```text
 # make
 # make install
 ```
 
-## 5. TWREPORT 경로 변경하기
-
-twcfg.txt 설정파일을 twcfg.txt.back 파일로 복사해서 백업을 합니다.
-
-```scheme
-# cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
-```
-
-twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로로 변경합니다.   
-표기법은 / 쓰기 전 아래와 같이 \ 를 붙여주셔야 합니다.  
-예\) /usr/azman/report/ -&gt; \/usr\/azman\/report\/
-
-```text
-# cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
-# cat [Install folder path]/etc/twcfg.txt | sed 's/REPORTFILE[ ]*[=/a-zA-Z]*/REPORTFILE    =[Install folder path]/g' >> [Install folder path]/etc/twcfg.txt
-```
-
-수정된 twcfg.txt 파일을 반영합니다.
-
-```text
-# [Install folder path]/sbin/twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
-```
-
-## 6. Rule 생성하기
+## 5. Create Rule
 
 ```text
 # vi [Install folder path]/etc/twpol.txt
 ```
 
-전역으로 사용할 변수를 설정합니다. TWREPORT 는 twcfg.txt 에서 변경한 경로와 동일하게 지정해 줍니다.
+### 5.1 Common Attribute
+
+| No | Attribute | Value | Description |
+| :---: | :---: | :---: | :--- |
+| 1 | file or folder | SEC\_CRIT | Critical files that cannot change |
+| 2 | file or folder | SEC\_SUID | Binaries with the SUID or SGID flags set |
+| 3 | file or folder | SEC\_BIN | Binaries that should not change |
+| 4 | file or folder | SEC\_CONFIG | Config files that are changed infrequently but accessed often |
+| 5 | file or folder | SEC\_LOG | Files that grow, but that should never change |
+| 6 | file or folder | SEC\_INVARIANT | Directories that should never change permission |
 
 ```bash
 # Global Variable Definitions
-@@section GLOBAL
+#@@section GLOBAL
+
 TWROOT   = "[Install folder path]/sbin";
 TWBIN    = "[Install folder path]/sbin";
 TWPOL    = "[Install folder path]/etc";
 TWDB     = "[Install folder path]/lib/tripwire/azvdi3.twd";
 TWSKEY   = "[Install folder path]/etc";
 TWLKEY   = "[Install folder path]/etc";
+TWREPORT = "[Install folder path]/tripwire/report";
 
-# 위에서 지정한 경로로 변경
-TWREPORT = "[Install folder path]";      
+#@@section FS
+SEC_CRIT      = $(IgnoreNone)-SHa ;  # Critical files that cannot change
+SEC_SUID      = $(IgnoreNone)-SHa ;  # Binaries with the SUID or SGID flags set
+SEC_BIN       = $(ReadOnly) ;        # Binaries that should not change
+SEC_CONFIG    = $(Dynamic) ;         # Config files that are changed infrequently but accessed often
+SEC_LOG       = $(Growing) ;         # Files that grow, but that should never change ownership
+SEC_INVARIANT = +tpug ;              # Directories that should never change permission or ownership
+SIG_LOW       = 33 ;                 # Non-critical files that are of minimal security impact
+SIG_MED       = 66 ;                 # Non-critical files that are of significant security impact
+SIG_HI        = 100 ;                # Critical files that are significant points of vulnerability
 ```
 
 
 
-### 6.1 파일 및 폴더 구분속성
+### 5.2 Custom Rule Format
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
-| 1 | file or folder | SEC\_CRIT | 변경할 수 없는 중요 파일 |
-| 2 | file or folder | SEC\_SUID | SUID 또는 SGID 플래그가 설정된 바이너리 파일 |
-| 3 | file or folder | SEC\_BIN | 변경할 수 없는 바이너리 파일 |
-| 4 | file or folder | SEC\_CONFIG | 자주 변경되지는 않지만 자주 접근하는 설정파일 |
-| 5 | file or folder | SEC\_LOG | 파일은 점점 커지고, 변경되지는 않는 로그파일 |
-| 6 | file or folder | SEC\_INVARIANT | 절대 권한을 변경하면 안되는 폴더 |
+| 1 | rulename | "Rule Name" | Just rule name |
+| 2 | severity | SIG\_HI | Critical files that are significant points of vulnerability |
+| 3 | severity | SIG\_MED | Non-critical files that are of significant security |
+| 4 | severity | SIG\_LOG | Non-critical files that are of minimal security impact |
 
 ```bash
-SEC_CRIT      = $(IgnoreNone)-SHa ;  
-SEC_SUID      = $(IgnoreNone)-SHa ;  
-SEC_BIN       = $(ReadOnly) ;        
-SEC_CONFIG    = $(Dynamic) ;         
-SEC_LOG       = $(Growing) ;         
-SEC_INVARIANT = +tpug ;              
-SIG_LOW       = 33 ;                 
-SIG_MED       = 66 ;                 
-SIG_HI        = 100 ;                
-```
-
-
-
-### 6.2 Rule 생성 형식
-
-| No | Attribute | Value | Description |
-| :---: | :---: | :---: | :--- |
-| 1 | rulename | "Rule Name" | Rule 의 이름 |
-| 2 | severity | SIG\_HI | 상당한 취약점을 가지는 중요한 파일 |
-| 3 | severity | SIG\_MED | 보안이 중요한 중요하지 않은 파일 |
-| 4 | severity | SIG\_LOG | 보안에 미치는 영향이 가장 적은 중요하지 않은 파일 |
-
-```bash
-@@section FS
-
 # My Rule
 (
     rulename = "My Rule",
-    severity = $(SIG_HI|SIG_MED|SIG_LOW),
+    severity = $(SIG_HI|SIG_MED|SIG_LOW)
 )
 {
     /home/tripwire/crit      -> $(SEC_CRIT);
@@ -154,149 +95,18 @@ SIG_HI        = 100 ;
 }
 ```
 
-## 7. 데이터베이스 초기
+## 6. Generate Database
 
 ```css
-# cd [Install folder path]/sbin
-# ./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
-# ./tripwire --init
+cd [Install folder path]/sbin
+./twadmin -m P [Install folder path]/etc/twpol.txt
+./tripwire --init
 ```
 
-## 8. 시스템 체크 및 레포트 확인
-
-tripwire --check 명령어를 사용하여 시스템을 체크합니다.
+## 7. Check
 
 ```text
-# cd [Install folder path]/sbin
-# ./tripwire --check
+cd [Install folder path]/sbin
+./tripwire --check
 ```
-
-TWREPORT 경로에 들어가서 레포트 파일이 생겼는지 확인합니다.
-
-```text
-# cd [Install folder path]
-# ls
-```
-
-저장된 레포트 파일을 읽어옵니다.
-
-```text
-# [Install folder path]/sbin/twprint -m r --twrfile [Report folder path]/*.twr
-```
-
-아래와 같이 레포트의 결과를 확인할 수 있습니다.
-
-```text
-Note: Report is not encrypted.
-Open Source Tripwire(R) 2.4.3.7 Integrity Check Report
-
-Report generated by:          root
-Report created on:            2020년 05월 21일 (목) 오후 03시 28분 36초
-Database last updated on:     Never
-
-===============================================================================
-Report Summary:
-===============================================================================
-
-Host name:                    localhost.localdomain
-Host IP address:              127.0.0.1
-Host ID:                      None
-Policy file used:             /usr/local/etc/tw.pol
-Configuration file used:      /usr/local/etc/tw.cfg
-Database file used:           /usr/local/lib/tripwire/localhost.localdomain.twd
-Command line used:            /usr/local/sbin/tripwire --check
-
-===============================================================================
-Rule Summary:
-===============================================================================
-
--------------------------------------------------------------------------------
-  Section: Unix File System
--------------------------------------------------------------------------------
-
-  Rule Name                       Severity Level    Added    Removed  Modified
-  ---------                       --------------    -----    -------  --------
-  Tripwire Binaries               0                 0        0        0
-* Tripwire Data Files             0                 4        0        2
-
-Total objects scanned:  15
-Total violations found:  6
-
-===============================================================================
-Object Detail:
-===============================================================================
-
--------------------------------------------------------------------------------
-  Section: Unix File System
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
-Rule Name: Tripwire Data Files (/usr/local/lib/tripwire)
-Severity Level: 0
--------------------------------------------------------------------------------
-  ----------------------------------------
-  Added Objects: 4
-  ----------------------------------------
-
-Added object name:  /usr/local/lib/tripwire/report/localhost.localdomain-20200521-152210.twr
-Added object name:  /usr/local/lib/tripwire/report/localhost.localdomain-20200521-152216.twr
-Added object name:  /usr/local/lib/tripwire/report/localhost.localdomain-20200521-152123.twr
-Added object name:  /usr/local/lib/tripwire/localhost.localdomain.twd
-
--------------------------------------------------------------------------------
-Rule Name: Tripwire Data Files (/usr/local/etc/tw.pol)
-Severity Level: 0
--------------------------------------------------------------------------------
-  ----------------------------------------
-  Modified Objects: 1
-  ----------------------------------------
-
-Modified object name:  /usr/local/etc/tw.pol
-
-  Property:            Expected                    Observed
-  -------------        -----------                 -----------
-* Modify Time          2020년 05월 21일 (목) 오후 03시 18분 58초
-                                                   2020년 05월 21일 (목) 오후 03시 23분 55초
-* CRC32                DTYVdE                      CyiaYH
-* MD5                  AaZCLpcQ17bWFRPgtg4SHc      A6jMZKOAan5Tr1uypy18Kr
-
-
-
--------------------------------------------------------------------------------
-Rule Name: Tripwire Data Files (/usr/local/etc/tw.cfg)
-Severity Level: 0
--------------------------------------------------------------------------------
-  ----------------------------------------
-  Modified Objects: 1
-  ----------------------------------------
-
-Modified object name:  /usr/local/etc/tw.cfg
-
-  Property:            Expected                    Observed
-  -------------        -----------                 -----------
-* Mode                 -rw-r-----                  -rw-r--r--
-* Modify Time          2020년 05월 21일 (목) 오후 02시 45분 34초
-                                                   2020년 05월 21일 (목) 오후 03시 27분 41초
-* CRC32                A6vKsA                      CUkup3
-* MD5                  AWqk3emnnxcVsmdzcZcrRH      D6MqZBwHaX4n7kGdh4d2p0
-
-
-
-===============================================================================
-Error Report:
-===============================================================================
-
-No Errors
-
--------------------------------------------------------------------------------
-*** End of report ***
-
-Open Source Tripwire 2.4 Portions copyright 2000-2018 Tripwire, Inc.  Tripwire is a registered
-trademark of Tripwire, Inc. This software comes with ABSOLUTELY NO WARRANTY;
-for details use --version. This is free software which may be redistributed
-or modified only under certain conditions; see COPYING for details.
-All rights reserved.
-```
-
-
 
