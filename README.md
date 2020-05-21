@@ -342,9 +342,7 @@ twcfg.txt 설정파일을 twcfg.txt.back 파일로 복사해서 백업을 합니
 # cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
 ```
 
-twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로로 변경합니다.   
-표기법은 / 쓰기 전 아래와 같이 \ 를 붙여주셔야 합니다.  
-예\) /usr/helloman/report/ -&gt; \/usr\/helloman\/report\/
+twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로로 변경합니다. 
 
 ```bash
 ROOT          =[Install folder path]/sbin
@@ -369,7 +367,8 @@ SYSLOGREPORTING =false
 MAILPROGRAM   =/usr/sbin/sendmail -oi -t
 ```
 
-**\[선택사항 - shell 스크립트용 코드\]** : 나중에 전체의 설치과정을 쉘 스크립트로 빼두고 실행하는 경우에 필요합니다. 우선은 필요가 없으니 넘어가도록 합니다.
+**\[선택사항 - shell 스크립트용 코드\]** : 나중에 전체의 설치과정을 쉘 스크립트로 빼두고 실행하는 경우에 필요합니다. 우선은 필요가 없으니 넘어가도록 합니다. 경로의 표기법은 '/' 쓰기 전 아래와 같이 '\' 를 붙여주셔야 합니다.  
+예\) /usr/helloman/report/ -&gt; \/usr\/helloman\/report\/
 
 ```text
 # cat [Install folder path]/etc/twcfg.txt | sed 's/REPORTFILE[ ]*[=/a-zA-Z]*/REPORTFILE    =[Install folder path]/g' >> [Install folder path]/etc/twcfg.txt
@@ -465,6 +464,7 @@ SIG_HI        = 100 ;
 ```bash
 # Global Variable Definitions
 @@section GLOBAL
+
 TWROOT   = "[Install folder path]/sbin";
 TWBIN    = "[Install folder path]/sbin";
 TWPOL    = "[Install folder path]/etc";
@@ -474,6 +474,9 @@ TWLKEY   = "[Install folder path]/etc";
 
 # 위에서 지정한 경로로 변경
 TWREPORT = "[Report folder path]";
+
+
+@@section FS
 
 SEC_CRIT      = $(SEC_IGNORE_NONE)-SHa ; 
 SEC_SUID      = $(SEC_IGNORE_NONE)-SHa ; 
@@ -485,8 +488,6 @@ SEC_INVARIANT = $(SEC_TEMPORARY) ;
 SIG_LOW       = 33 ;
 SIG_MED       = 66 ;
 SIG_HI        = 100 ;
-
-@@section FS
 
 # My Rule
 (
