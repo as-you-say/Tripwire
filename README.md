@@ -87,8 +87,7 @@ twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로
 
 ```bash
 # Global Variable Definitions
-#@@section GLOBAL
-
+@@section GLOBAL
 TWROOT   = "[Install folder path]/sbin";
 TWBIN    = "[Install folder path]/sbin";
 TWPOL    = "[Install folder path]/etc";
@@ -112,7 +111,6 @@ TWREPORT = "/usr/azman/report";      # 위에서 지정한 경로로 변
 | 6 | file or folder | SEC\_INVARIANT | 절대 권한을 변경하면 안되는 폴더 |
 
 ```bash
-#@@section FS
 SEC_CRIT      = $(IgnoreNone)-SHa ;  
 SEC_SUID      = $(IgnoreNone)-SHa ;  
 SEC_BIN       = $(ReadOnly) ;        
@@ -136,10 +134,12 @@ SIG_HI        = 100 ;
 | 4 | severity | SIG\_LOG | 보안에 미치는 영향이 가장 적은 중요하지 않은 파일 |
 
 ```bash
+@@section FS
+
 # My Rule
 (
     rulename = "My Rule",
-    severity = $(SIG_HI|SIG_MED|SIG_LOW)
+    severity = $(SIG_HI|SIG_MED|SIG_LOW),
 )
 {
     /home/tripwire/crit      -> $(SEC_CRIT);
@@ -151,11 +151,11 @@ SIG_HI        = 100 ;
 }
 ```
 
-## 7. Generate Database
+## 7. 데이터베이스 초기
 
 ```css
 cd [Install folder path]/sbin
-./twadmin -m P [Install folder path]/etc/twpol.txt
+./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
 ./tripwire --init
 ```
 
@@ -165,4 +165,6 @@ cd [Install folder path]/sbin
 cd [Install folder path]/sbin
 ./tripwire --check
 ```
+
+
 
