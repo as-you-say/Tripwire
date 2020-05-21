@@ -400,6 +400,7 @@ twpol.txt 파일에 사용할 전역변수 및 Rule 을 입력합니다.
 ```bash
 # Global Variable Definitions
 @@section GLOBAL
+
 TWROOT   = "[Install folder path]/sbin";
 TWBIN    = "[Install folder path]/sbin";
 TWPOL    = "[Install folder path]/etc";
@@ -427,6 +428,7 @@ TWREPORT = "[Report folder path]";
 ```bash
 # Global Variable Definitions
 @@section GLOBAL
+
 TWROOT   = "[Install folder path]/sbin";
 TWBIN    = "[Install folder path]/sbin";
 TWPOL    = "[Install folder path]/etc";
@@ -436,6 +438,9 @@ TWLKEY   = "[Install folder path]/etc";
 
 # 위에서 지정한 경로로 변경
 TWREPORT = "[Report folder path]";
+
+
+@@section FS
 
 SEC_CRIT      = $(IgnoreNone)-SHa ;  
 SEC_SUID      = $(IgnoreNone)-SHa ;  
