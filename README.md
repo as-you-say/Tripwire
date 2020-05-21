@@ -31,7 +31,7 @@ wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니�
 # cd ./tripwire-open-source-2.4.3.7
 ```
 
-## 3. Configure 파일 설정 \(둘중 하나 선\)
+## 3. Configure 파일 설정 \(둘중 하나 선택\)
 
 기본 경로로 설치하기를 원한다면 --prefix 옵션 없이 Configure 파일을 실행합니다.
 
