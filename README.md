@@ -1,39 +1,86 @@
-# Install
+# 설치하기
 
-## 1. Download & Unzip
+## 1. 필요한 패키지 설치
+
+Github 페이지에 있는 tripwire 를 다운로드 하기 위한 wget 패키지를 설치합니다.
+
+```text
+# yum -y install wget
+```
+
+tripwire 소스를 컴파일 하기 위한 gcc / gcc-c++ 패키지를 설치합니다.
 
 ```
+# yum -y install gcc gcc-c++
+```
+
+## 2. 다운로드 및 압축풀
+
+wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니다.
+
+```text
 # wget https://github.com/Tripwire/tripwire-open-source/releases/download/2.4.3.7/tripwire-open-source-2.4.3.7.tar.gz
+```
+
+다운받은 소스의 압축을 풀고, 생성된 폴더로 이동합니다.
+
+```text
 # tar -zxvf tripwire-open-source-2.4.3.7.tar.gz
 # cd ./tripwire-open-source-2.4.3.7
 ```
 
-## 2. Install gcc, gcc-c++ package
+## 3. Configure 파일 설정
+
+기본 경로로 설치하기를 원한다면 --prefix 옵션 없이 Configure 파일을 실행합니다.
 
 ```text
-# yum -y install gcc gcc-c++
+# ./configure
 ```
 
-## 3. Set Install folder path
+별도로 설치하고싶은 경로가 있다면 --prefix 옵션을 통해 경로를 지정해줍니다.
 
 ```text
 # ./configure --prefix=[Install folder path]
 ```
 
-## 4. Compile
+## 4. 소스 컴파일
+
+make , make install 명령어를 통해서 소를 컴파일 합니다.
 
 ```text
 # make
 # make install
 ```
 
-## 5. Create Rule
+## 5. TWREPORT 경로 변경하기
+
+twcfg.txt 설정파일을 twcfg.txt.back 파일로 복사해서 백업을 합니다.
+
+```text
+# cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
+```
+
+twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로로 변경합니다.   
+예\) /usr/azman/report/
+
+```text
+# cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
+# cat [Install folder path]/etc/twcfg.txt | sed 's/REPORTFILE[ ]*[=/a-zA-Z]*/REPORTFILE    =\/usr\/azman\/report\//g' >> [Install folder path]/etc/twcfg.txt
+```
+
+수정된 twcfg.txt 파일을 반영합니다.
+
+```text
+# [Install folder path]/sbin/twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
+```
+
+## 6. Rule 생성하기
 
 ```text
 # vi [Install folder path]/etc/twpol.txt
 ```
 
-### 5.1 Common Attribute
+### 6.1 파일의 중요도 및 특성을 표현하는 속성
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
@@ -70,7 +117,7 @@ SIG_HI        = 100 ;                # Critical files that are significant point
 
 
 
-### 5.2 Custom Rule Format
+### 6.2 Custom Rule Format
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
@@ -95,7 +142,7 @@ SIG_HI        = 100 ;                # Critical files that are significant point
 }
 ```
 
-## 6. Generate Database
+## 7. Generate Database
 
 ```css
 cd [Install folder path]/sbin
@@ -103,7 +150,7 @@ cd [Install folder path]/sbin
 ./tripwire --init
 ```
 
-## 7. Check
+## 8. Check
 
 ```text
 cd [Install folder path]/sbin

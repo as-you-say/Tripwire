@@ -1,4 +1,4 @@
 # Table of contents
 
-* [Install](README.md)
+* [설치하기](README.md)
 
