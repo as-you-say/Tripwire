@@ -18,6 +18,8 @@ tripwire 소스를 컴파일 하기 위한 gcc / gcc-c++ 패키지를 설치합�
 
 wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니다.
 
+{% embed url="https://github.com/Tripwire/tripwire-open-source/releases/download/2.4.3.7/tripwire-open-source-2.4.3.7.tar.gz" %}
+
 ```text
 # wget https://github.com/Tripwire/tripwire-open-source/releases/download/2.4.3.7/tripwire-open-source-2.4.3.7.tar.gz
 ```
@@ -37,7 +39,8 @@ wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니�
 # ./configure
 ```
 
-별도로 설치하고싶은 경로가 있다면 --prefix 옵션을 통해 경로를 지정해줍니다.
+별도로 설치하고싶은 경로가 있다면 --prefix 옵션을 통해 경로를 지정해줍니다.  
+예\) \[Install folder path\] : /usr/local/test
 
 ```text
 # ./configure --prefix=[Install folder path]
@@ -97,40 +100,40 @@ TWREPORT = "/usr/azman/report";      # 위에서 지정한 경로로 변
 
 
 
-### 6.1 파일의 중요도 및 특성을 표현하는 속성
+### 6.1 파일 및 폴더 구분속성
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
 | 1 | file or folder | SEC\_CRIT | 변경할 수 없는 중요 파일 |
 | 2 | file or folder | SEC\_SUID | SUID 또는 SGID 플래그가 설정된 바이너리 파일 |
-| 3 | file or folder | SEC\_BIN | 변경할 수 없는 바이너리 파 |
-| 4 | file or folder | SEC\_CONFIG | Config files that are changed infrequently but accessed often |
-| 5 | file or folder | SEC\_LOG | Files that grow, but that should never change |
-| 6 | file or folder | SEC\_INVARIANT | Directories that should never change permission |
+| 3 | file or folder | SEC\_BIN | 변경할 수 없는 바이너리 파일 |
+| 4 | file or folder | SEC\_CONFIG | 자주 변경되지는 않지만 자주 접근하는 설정파일 |
+| 5 | file or folder | SEC\_LOG | 파일은 점점 커지고, 변경되지는 않는 로그파일 |
+| 6 | file or folder | SEC\_INVARIANT | 절대 권한을 변경하면 안되는 폴더 |
 
 ```bash
 #@@section FS
-SEC_CRIT      = $(IgnoreNone)-SHa ;  # Critical files that cannot change
-SEC_SUID      = $(IgnoreNone)-SHa ;  # Binaries with the SUID or SGID flags set
-SEC_BIN       = $(ReadOnly) ;        # Binaries that should not change
-SEC_CONFIG    = $(Dynamic) ;         # Config files that are changed infrequently but accessed often
-SEC_LOG       = $(Growing) ;         # Files that grow, but that should never change ownership
-SEC_INVARIANT = +tpug ;              # Directories that should never change permission or ownership
-SIG_LOW       = 33 ;                 # Non-critical files that are of minimal security impact
-SIG_MED       = 66 ;                 # Non-critical files that are of significant security impact
-SIG_HI        = 100 ;                # Critical files that are significant points of vulnerability
+SEC_CRIT      = $(IgnoreNone)-SHa ;  
+SEC_SUID      = $(IgnoreNone)-SHa ;  
+SEC_BIN       = $(ReadOnly) ;        
+SEC_CONFIG    = $(Dynamic) ;         
+SEC_LOG       = $(Growing) ;         
+SEC_INVARIANT = +tpug ;              
+SIG_LOW       = 33 ;                 
+SIG_MED       = 66 ;                 
+SIG_HI        = 100 ;                
 ```
 
 
 
-### 6.2 Custom Rule Format
+### 6.2 Rule 생성 형식
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
-| 1 | rulename | "Rule Name" | Just rule name |
-| 2 | severity | SIG\_HI | Critical files that are significant points of vulnerability |
-| 3 | severity | SIG\_MED | Non-critical files that are of significant security |
-| 4 | severity | SIG\_LOG | Non-critical files that are of minimal security impact |
+| 1 | rulename | "Rule Name" | 단순한 Rule 의 이름이며, 원하는 이름으로 설정할 수 있다. |
+| 2 | severity | SIG\_HI | 상당한 취약점을 가지는 중요한 파일 |
+| 3 | severity | SIG\_MED | 보안이 중요한 중요하지 않은 파 |
+| 4 | severity | SIG\_LOG | 보안에 미치는 영향이 가장 적은 중요하지 않은 파일 |
 
 ```bash
 # My Rule
