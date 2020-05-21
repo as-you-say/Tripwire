@@ -64,11 +64,12 @@ twcfg.txt 설정파일을 twcfg.txt.back 파일로 복사해서 백업을 합니
 ```
 
 twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로로 변경합니다.   
-예\) /usr/azman/report/
+표기법은 / 쓰기 전 아래와 같이 \ 를 붙여주셔야 합니다.  
+예\) /usr/azman/report/ -&gt; \/usr\/azman\/report\/
 
 ```text
 # cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
-# cat [Install folder path]/etc/twcfg.txt | sed 's/REPORTFILE[ ]*[=/a-zA-Z]*/REPORTFILE    =\/usr\/azman\/report\//g' >> [Install folder path]/etc/twcfg.txt
+# cat [Install folder path]/etc/twcfg.txt | sed 's/REPORTFILE[ ]*[=/a-zA-Z]*/REPORTFILE    =[Install folder path]/g' >> [Install folder path]/etc/twcfg.txt
 ```
 
 수정된 twcfg.txt 파일을 반영합니다.
@@ -96,7 +97,7 @@ TWSKEY   = "[Install folder path]/etc";
 TWLKEY   = "[Install folder path]/etc";
 
 # 위에서 지정한 경로로 변경
-TWREPORT = "/usr/azman/report";      
+TWREPORT = "[Install folder path]";      
 ```
 
 
@@ -173,9 +174,13 @@ tripwire --check 명령어를 사용하여 시스템을 체크합니다.
 TWREPORT 경로에 들어가서 레포트 파일이 생겼는지 확인합니다.
 
 ```text
-# cd /usr/azman/report
+# cd [Install folder path]
 # ls
 ```
 
+저장된 레포트 파일을 읽어옵니다.
 
+```text
+# [Install folder path]/sbin/twprint -m r --twrfile [Report folder path]/*.twr
+```
 
