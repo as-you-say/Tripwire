@@ -80,16 +80,7 @@ twcfg.txt 설정파일에서 REPORTFILE 이 저장될 경로를 원하는 경로
 # vi [Install folder path]/etc/twpol.txt
 ```
 
-### 6.1 파일의 중요도 및 특성을 표현하는 속성
-
-| No | Attribute | Value | Description |
-| :---: | :---: | :---: | :--- |
-| 1 | file or folder | SEC\_CRIT | Critical files that cannot change |
-| 2 | file or folder | SEC\_SUID | Binaries with the SUID or SGID flags set |
-| 3 | file or folder | SEC\_BIN | Binaries that should not change |
-| 4 | file or folder | SEC\_CONFIG | Config files that are changed infrequently but accessed often |
-| 5 | file or folder | SEC\_LOG | Files that grow, but that should never change |
-| 6 | file or folder | SEC\_INVARIANT | Directories that should never change permission |
+전역으로 사용할 변수를 설정합니다. TWREPORT 는 twcfg.txt 에서 변경한 경로와 동일하게 지정해 줍니다.
 
 ```bash
 # Global Variable Definitions
@@ -101,8 +92,23 @@ TWPOL    = "[Install folder path]/etc";
 TWDB     = "[Install folder path]/lib/tripwire/azvdi3.twd";
 TWSKEY   = "[Install folder path]/etc";
 TWLKEY   = "[Install folder path]/etc";
-TWREPORT = "[Install folder path]/tripwire/report";
+TWREPORT = "/usr/azman/report";      # 위에서 지정한 경로로 변
+```
 
+
+
+### 6.1 파일의 중요도 및 특성을 표현하는 속성
+
+| No | Attribute | Value | Description |
+| :---: | :---: | :---: | :--- |
+| 1 | file or folder | SEC\_CRIT | 변경할 수 없는 중요 파일 |
+| 2 | file or folder | SEC\_SUID | SUID 또는 SGID 플래그가 설정된 바이너리 파일 |
+| 3 | file or folder | SEC\_BIN | 변경할 수 없는 바이너리 파 |
+| 4 | file or folder | SEC\_CONFIG | Config files that are changed infrequently but accessed often |
+| 5 | file or folder | SEC\_LOG | Files that grow, but that should never change |
+| 6 | file or folder | SEC\_INVARIANT | Directories that should never change permission |
+
+```bash
 #@@section FS
 SEC_CRIT      = $(IgnoreNone)-SHa ;  # Critical files that cannot change
 SEC_SUID      = $(IgnoreNone)-SHa ;  # Binaries with the SUID or SGID flags set
