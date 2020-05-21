@@ -1,5 +1,11 @@
 # 설치하기
 
+## 파라미터
+
+\[Install folder path\] : Tripwire 를 설치할 폴더 경로
+
+\[Report folder path\] : Tripwire 레포트를 저장할 폴더 경로
+
 ## 1. 필요한 패키지 설치
 
 **Github** 페이지에 있는 **tripwire** 를 다운로드 하기 위한 **wget** 패키지를 설치합니다.
@@ -442,15 +448,16 @@ TWREPORT = "[Report folder path]";
 
 @@section FS
 
-SEC_CRIT      = $(IgnoreNone)-SHa ;  
-SEC_SUID      = $(IgnoreNone)-SHa ;  
-SEC_BIN       = $(ReadOnly) ;        
-SEC_CONFIG    = $(Dynamic) ;         
-SEC_LOG       = $(Growing) ;         
-SEC_INVARIANT = +tpug ;              
-SIG_LOW       = 33 ;                 
-SIG_MED       = 66 ;                 
-SIG_HI        = 100 ;                
+SEC_CRIT      = $(SEC_IGNORE_NONE)-SHa ; 
+SEC_SUID      = $(SEC_IGNORE_NONE)-SHa ; 
+SEC_BIN       = $(SEC_READONLY) ;        
+SEC_CONFIG    = $(SEC_DYNAMIC) ;         
+SEC_TTY       = $(SEC_DYNAMIC)-ugp ;     
+SEC_LOG       = $(SEC_GROWING) ;         
+SEC_INVARIANT = $(SEC_TEMPORARY) ;       
+SIG_LOW       = 33 ;
+SIG_MED       = 66 ;
+SIG_HI        = 100 ;      
 ```
 
 
@@ -575,7 +582,7 @@ TWREPORT 경로에 들어가서 레포트 파일이 생겼는지 확인합니다
 # [Install folder path]/sbin/twprint -m r --twrfile [Report folder path]/*.twr
 ```
 
-아래와 같이 레포트의 결과를 확인할 수 있습니다.
+아래와 같은 형태의 레포트의 결과를 확인할 수 있습니다.
 
 ```text
 Note: Report is not encrypted.
