@@ -478,19 +478,19 @@ TWLKEY   = "[Install folder path]/etc";
 # 위에서 지정한 경로로 변경
 TWREPORT = "[Report folder path]";
 
-SEC_CRIT      = $(IgnoreNone)-SHa ;  
-SEC_SUID      = $(IgnoreNone)-SHa ;  
-SEC_BIN       = $(ReadOnly) ;        
-SEC_CONFIG    = $(Dynamic) ;         
-SEC_LOG       = $(Growing) ;         
-SEC_INVARIANT = +tpug ;              
-SIG_LOW       = 33 ;                 
-SIG_MED       = 66 ;                 
-SIG_HI        = 100 ; 
+SEC_CRIT      = $(IgnoreNone)-SHa ;
+SEC_SUID      = $(IgnoreNone)-SHa ;
+SEC_BIN       = $(ReadOnly) ;
+SEC_CONFIG    = $(Dynamic) ;
+SEC_LOG       = $(Growing) ;
+SEC_INVARIANT = +tpug ;
+SIG_LOW       = 33 ;
+SIG_MED       = 66 ;
+SIG_HI        = 100 ;
 
 @@section FS
 
-# 직접 추가한 Rule
+# My Rule
 (
     rulename = "My Rule",
     severity = $(SIG_HI),
@@ -507,10 +507,46 @@ SIG_HI        = 100 ;
 
 ## 7. 데이터베이스 초기화
 
+전역변수와 Rule 을 추가하였다면, 이제 twcfg.txt 파일을 반영해야 합니다.  
+twadmin 명령을 통해서 tw.cfg 파일을 생성해 줍니다.
+
 ```css
 # cd [Install folder path]/sbin
 # ./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
+```
+
+위에서 생성한 site 비밀번호를 입력한 후, Enter 키를 눌러줍니다.
+
+```text
+Please enter your site passphrase:
+Wrote configuration file: [Install folder path]/etc/tw.cfg
+```
+
+그 후, 데이터베이스를 초기화합니다.
+
+```css
 # ./tripwire --init
+```
+
+local 비밀번호로 설정할 문자열을 입력한 후, Enter 키를 눌러줍니다.
+
+```text
+Please enter your local passphrase:
+```
+
+데이터베이스 파일이 생기고, 초기화가 완료되었다는 메시지를 확인하실 수 있습니다.  
+The database was successfully generated.
+
+```text
+Parsing policy file: [Install folder path]/etc/tw.pol
+Generating the database...
+*** Processing Unix File System ***
+The object: "/run" is on a different file system...ignoring.
+The object: "/sys" is on a different file system...ignoring.
+The object: "/dev/hugepages" is on a different file system...ignoring.
+The object: "/dev/mqueue" is on a different file system...ignoring.
+Wrote database file: [Install folder path]/lib/tripwire/localhost.localdomain.twd
+The database was successfully generated.
 ```
 
 ## 8. 시스템 체크 및 레포트 확인
@@ -525,7 +561,7 @@ tripwire --check 명령어를 사용하여 시스템을 체크합니다.
 TWREPORT 경로에 들어가서 레포트 파일이 생겼는지 확인합니다.
 
 ```text
-# cd [Install folder path]
+# cd [Report folder path]
 # ls
 ```
 
