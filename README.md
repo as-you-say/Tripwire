@@ -505,7 +505,7 @@ SIG_HI        = 100 ;
 }
 ```
 
-## 7. 데이터베이스 초기
+## 7. 데이터베이스 초기화
 
 ```css
 # cd [Install folder path]/sbin
