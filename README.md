@@ -475,12 +475,13 @@ TWLKEY   = "[Install folder path]/etc";
 # 위에서 지정한 경로로 변경
 TWREPORT = "[Report folder path]";
 
-SEC_CRIT      = $(IgnoreNone)-SHa ;
-SEC_SUID      = $(IgnoreNone)-SHa ;
-SEC_BIN       = $(ReadOnly) ;
-SEC_CONFIG    = $(Dynamic) ;
-SEC_LOG       = $(Growing) ;
-SEC_INVARIANT = +tpug ;
+SEC_CRIT      = $(SEC_IGNORE_NONE)-SHa ; 
+SEC_SUID      = $(SEC_IGNORE_NONE)-SHa ; 
+SEC_BIN       = $(SEC_READONLY) ;        
+SEC_CONFIG    = $(SEC_DYNAMIC) ;         
+SEC_TTY       = $(SEC_DYNAMIC)-ugp ;     
+SEC_LOG       = $(SEC_GROWING) ;         
+SEC_INVARIANT = $(SEC_TEMPORARY) ;       
 SIG_LOW       = 33 ;
 SIG_MED       = 66 ;
 SIG_HI        = 100 ;
@@ -509,7 +510,7 @@ twadmin 명령을 통해서 tw.cfg 파일을 생성해 줍니다.
 
 ```css
 # cd [Install folder path]/sbin
-# ./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
+# ./twadmin --create-polfile -S [Install folder path]/site.key [Install folder path]/etc/tripwire/twpol.txt
 ```
 
 위에서 생성한 site 비밀번호를 입력한 후, Enter 키를 눌러줍니다.
