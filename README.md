@@ -234,6 +234,8 @@ Continue with installation? [y/n] y
 
 원하는 **site 비밀번호**를 설정합니다. ex\) site
 
+원하는 **local 비밀번호**를 설정합니다 ex\) local
+
 ```text
 ----------------------------------------------
 Creating directories...
@@ -274,39 +276,34 @@ See the Tripwire manual for more information.
 
 ----------------------------------------------
 Creating key files...
-The site key file "/usr/local/etc/site.key"
-exists and will not be overwritten.
-The site key file "/usr/local/etc/localhost.localdomain-local.key"
-exists and will not be overwritten.
+
+(When selecting a passphrase, keep in mind that good passphrases typically
+have upper and lower case letters, digits and punctuation marks, and are
+at least 8 characters in length.)
+
+Enter the site keyfile passphrase: [원하는 site 비밀번호]
+Verify the site keyfile passphrase: [원하는 site 비밀번]
+Generating key (this may take several minutes)...Key generation complete.
+
+(When selecting a passphrase, keep in mind that good passphrases typically
+have upper and lower case letters, digits and punctuation marks, and are
+at least 8 characters in length.)
+
+Enter the local keyfile passphrase: [원하는 local 비밀번호]
+Verify the local keyfile passphrase: [원하는 local 비밀번]
+
+```
+
+위에서 설정한 **site 비밀번호**를 한번 더 입력한 후 **Enter 키**를 눌러줍니다.
+
+```text
+Generating key (this may take several minutes)...Key generation complete.
 
 ----------------------------------------------
 Generating Tripwire configuration file...
 
 ----------------------------------------------
 Creating signed configuration file...
-Backing up /usr/local/etc/tw.cfg
-        to /usr/local/etc/tw.cfg.27735.bak
-Please enter your site passphrase:
-```
-
-위에서 설정한 **site 비밀번호**를 한번 더 입력한 후 **Enter 키**를 눌러줍니다.
-
-```text
-Wrote configuration file: /usr/local/etc/tw.cfg
-
-A clear-text version of the Tripwire configuration file
-/usr/local/etc/twcfg.txt
-has been preserved for your inspection.  It is recommended
-that you delete this file manually after you have examined it.
-
-
-----------------------------------------------
-Customizing default policy file...
-
-----------------------------------------------
-Creating signed policy file...
-Backing up /usr/local/etc/tw.pol
-        to /usr/local/etc/tw.pol.27735.bak
 Please enter your site passphrase:
 ```
 
