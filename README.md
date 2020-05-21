@@ -31,7 +31,7 @@ wget 명령어를 이용하여 tripwire 소스를 Github에서 다운받습니�
 # cd ./tripwire-open-source-2.4.3.7
 ```
 
-## 3. Configure 파일 설정
+## 3. Configure 파일 설정 \(둘중 하나 선\)
 
 기본 경로로 설치하기를 원한다면 --prefix 옵션 없이 Configure 파일을 실행합니다.
 
@@ -59,7 +59,7 @@ make , make install 명령어를 통해서 소를 컴파일 합니다.
 
 twcfg.txt 설정파일을 twcfg.txt.back 파일로 복사해서 백업을 합니다.
 
-```text
+```scheme
 # cp [Install folder path]/etc/twcfg.txt [Install folder path]/etc/twcfg.txt.back
 ```
 
@@ -94,7 +94,9 @@ TWPOL    = "[Install folder path]/etc";
 TWDB     = "[Install folder path]/lib/tripwire/azvdi3.twd";
 TWSKEY   = "[Install folder path]/etc";
 TWLKEY   = "[Install folder path]/etc";
-TWREPORT = "/usr/azman/report";      # 위에서 지정한 경로로 변
+
+# 위에서 지정한 경로로 변경
+TWREPORT = "/usr/azman/report";      
 ```
 
 
@@ -154,16 +156,25 @@ SIG_HI        = 100 ;
 ## 7. 데이터베이스 초기
 
 ```css
-cd [Install folder path]/sbin
-./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
-./tripwire --init
+# cd [Install folder path]/sbin
+# ./twadmin --create-cfgfile -S [Install folder path]/etc/site.key [Install folder path]/etc/twcfg.txt
+# ./tripwire --init
 ```
 
-## 8. Check
+## 8. 시스템 체크 및 레포트 확
+
+tripwire --check 명령어를 사용하여 시스템을 체크합니다.
 
 ```text
-cd [Install folder path]/sbin
-./tripwire --check
+# cd [Install folder path]/sbin
+# ./tripwire --check
+```
+
+TWREPORT 경로에 들어가서 레포트 파일이 생겼는지 확인합니다.
+
+```text
+# cd /usr/azman/report
+# ls
 ```
 
 
