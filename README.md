@@ -130,9 +130,9 @@ SIG_HI        = 100 ;
 
 | No | Attribute | Value | Description |
 | :---: | :---: | :---: | :--- |
-| 1 | rulename | "Rule Name" | 단순한 Rule 의 이름이며, 원하는 이름으로 설정할 수 있다. |
+| 1 | rulename | "Rule Name" | Rule 의 이름 |
 | 2 | severity | SIG\_HI | 상당한 취약점을 가지는 중요한 파일 |
-| 3 | severity | SIG\_MED | 보안이 중요한 중요하지 않은 파 |
+| 3 | severity | SIG\_MED | 보안이 중요한 중요하지 않은 파일 |
 | 4 | severity | SIG\_LOG | 보안에 미치는 영향이 가장 적은 중요하지 않은 파일 |
 
 ```bash
